@@ -1,4 +1,4 @@
-<div class="apidocDiv">
+<html><head></head><body><div class="apidocDiv">
 <style>
 /*csslint
 */
@@ -47,17 +47,10 @@
 }
 </style>
 <h1>api documentation for
-    <a
-
-        href="https://github.com/fivdi/onoff#readme"
-
-    >onoff (v1.1.2)</a>
+    <a href="https://github.com/fivdi/onoff#readme">onoff (v1.1.2)</a>
 </h1>
 <h4>GPIO access and interrupt detection with Node.js</h4>
-<div class="apidocSectionDiv"><a
-    href="#apidoc.tableOfContents"
-    id="apidoc.tableOfContents"
-><h1>table of contents</h1></a><ol>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
 
     <li class="apidocModuleLi"><a href="#apidoc.module.onoff">module onoff</a><ol>
 
@@ -588,7 +581,7 @@
     return new Gpio(gpio, direction, edge, options);
   }
 
-  if (typeof edge === &#x27;object&#x27; &#x26;&#x26; !options) {
+  if (typeof edge === 'object' &amp;&amp; !options) {
     options = edge;
     edge = undefined;
   }
@@ -596,28 +589,28 @@
   options = options || {};
 
   this.gpio = gpio;
-  this.gpioPath = GPIO_ROOT_PATH + &#x27;gpio&#x27; + this.gpio + &#x27;/&#x27;;
+  this.gpioPath = GPIO_ROOT_PATH + 'gpio' + this.gpio + '/';
   this.opts = {};
   this.opts.debounceTimeout = options.debounceTimeout || 0;
   this.readBuffer = new Buffer(16);
   this.listeners = [];
 
-  valuePath = this.gpioPath + &#x27;value&#x27;;
+  valuePath = this.gpioPath + 'value';
 
   if (!fs.existsSync(this.gpioPath)) {
-    // The pin hasn&#x27;t been exported yet so export it.
-    fs.writeFileSync(GPIO_ROOT_PATH + &#x27;export&#x27;, this.gpio);
+    // The pin hasn't been exported yet so export it.
+    fs.writeFileSync(GPIO_ROOT_PATH + 'export', this.gpio);
 
     // A hack to avoid the issue described here:
     // https://github.com/raspberrypi/linux/issues/553
-    // I don&#x27;t like this solution, but it enables compatibility with older
+    // I don't like this solution, but it enables compatibility with older
     // versions of onoff, i.e., the Gpio constructor was and still is
     // synchronous.
     directionSet = false;
     while (!directionSet) {
       try {
         tries += 1;
-        fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+        fs.writeFileSync(this.gpioPath + 'direction', direction);
         directionSet = true;
       } catch (e) {
         if (tries === 10000) {
@@ -627,11 +620,11 @@
     }
 
     if (edge) {
-      fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+      fs.writeFileSync(this.gpioPath + 'edge', edge);
     }
 
     if (!!options.activeLow) {
-      fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;, ONE);
+      fs.writeFileSync(this.gpioPath + 'active_low', ONE);
     }
   } else {
     // The pin has already been exported, perhaps by onoff itself, perhaps
@@ -645,17 +638,17 @@
     // file, but not the direction file. This is also ok as the WiringPi
     // gpio utility can set both direction and edge. If there are any
     // errors while attempting to perform the modifications, just keep on
-    // truckin&#x27;.
+    // truckin'.
     try {
-      fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+      fs.writeFileSync(this.gpioPath + 'direction', direction);
     } catch (ignore) {
     }
     try {
       if (edge) {
-        fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+        fs.writeFileSync(this.gpioPath + 'edge', edge);
       }
       try {
-        fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;,
+        fs.writeFileSync(this.gpioPath + 'active_low',
           !!options.activeLow ? ONE : ZERO
         );
       } catch (ignore) {
@@ -664,7 +657,7 @@
     }
   }
 
-  this.valueFd = fs.openSync(valuePath, &#x27;r+&#x27;); // Cache fd for performance.
+  this.valueFd = fs.openSync(valuePath, 'r+'); // Cache fd for performance.
 
   // Read current value before polling to prevent unauthentic interrupts.
   this.readSync();
@@ -685,7 +678,7 @@
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.activeLow = function () {
   return fs.readFileSync(
-    this.gpioPath + &#x27;active_low&#x27;)[0] === ONE[0] ? true : false;
+    this.gpioPath + 'active_low')[0] === ONE[0] ? true : false;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -700,7 +693,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.direction = function () {
-  return fs.readFileSync(this.gpioPath + &#x27;direction&#x27;).toString().trim();
+  return fs.readFileSync(this.gpioPath + 'direction').toString().trim();
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -715,7 +708,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.edge = function () {
-  return fs.readFileSync(this.gpioPath + &#x27;edge&#x27;).toString().trim();
+  return fs.readFileSync(this.gpioPath + 'edge').toString().trim();
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -746,7 +739,7 @@
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.read = function (callback) {
   fs.read(this.valueFd, this.readBuffer, 0, 1, 0, function (err, bytes, buf) {
-    if (typeof callback === &#x27;function&#x27;) {
+    if (typeof callback === 'function') {
       if (err) {
         return callback(err);
       }
@@ -784,7 +777,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.setActiveLow = function (invert) {
-  fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;, !!invert ? ONE : ZERO);
+  fs.writeFileSync(this.gpioPath + 'active_low', !!invert ? ONE : ZERO);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -799,7 +792,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.setDirection = function (direction) {
-  fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+  fs.writeFileSync(this.gpioPath + 'direction', direction);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -814,7 +807,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.setEdge = function (edge) {
-  fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+  fs.writeFileSync(this.gpioPath + 'edge', edge);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -832,7 +825,7 @@
   this.unwatchAll();
   fs.closeSync(this.valueFd);
   try {
-    fs.writeFileSync(GPIO_ROOT_PATH + &#x27;unexport&#x27;, this.gpio);
+    fs.writeFileSync(GPIO_ROOT_PATH + 'unexport', this.gpio);
   } catch (ignore) {
     // Flow of control always arrives here when cape_universal is enabled on
     // the bbb.
@@ -851,8 +844,8 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">Gpio.prototype.unwatch = function (callback) {
-  if (this.listeners.length &#x3e; 0) {
-    if (typeof callback !== &#x27;function&#x27;) {
+  if (this.listeners.length &gt; 0) {
+    if (typeof callback !== 'function') {
       this.listeners = [];
     } else {
       this.listeners = this.listeners.filter(function (listener) {
@@ -899,7 +892,7 @@
 
   if (this.listeners.length === 1) {
     events = Epoll.EPOLLPRI;
-    if (this.opts.debounceTimeout &#x3e; 0) {
+    if (this.opts.debounceTimeout &gt; 0) {
       events |= Epoll.EPOLLONESHOT;
     }
     this.poller.add(this.valueFd, events);
@@ -967,7 +960,7 @@
     return new Gpio(gpio, direction, edge, options);
   }
 
-  if (typeof edge === &#x27;object&#x27; &#x26;&#x26; !options) {
+  if (typeof edge === 'object' &amp;&amp; !options) {
     options = edge;
     edge = undefined;
   }
@@ -975,28 +968,28 @@
   options = options || {};
 
   this.gpio = gpio;
-  this.gpioPath = GPIO_ROOT_PATH + &#x27;gpio&#x27; + this.gpio + &#x27;/&#x27;;
+  this.gpioPath = GPIO_ROOT_PATH + 'gpio' + this.gpio + '/';
   this.opts = {};
   this.opts.debounceTimeout = options.debounceTimeout || 0;
   this.readBuffer = new Buffer(16);
   this.listeners = [];
 
-  valuePath = this.gpioPath + &#x27;value&#x27;;
+  valuePath = this.gpioPath + 'value';
 
   if (!fs.existsSync(this.gpioPath)) {
-    // The pin hasn&#x27;t been exported yet so export it.
-    fs.writeFileSync(GPIO_ROOT_PATH + &#x27;export&#x27;, this.gpio);
+    // The pin hasn't been exported yet so export it.
+    fs.writeFileSync(GPIO_ROOT_PATH + 'export', this.gpio);
 
     // A hack to avoid the issue described here:
     // https://github.com/raspberrypi/linux/issues/553
-    // I don&#x27;t like this solution, but it enables compatibility with older
+    // I don't like this solution, but it enables compatibility with older
     // versions of onoff, i.e., the Gpio constructor was and still is
     // synchronous.
     directionSet = false;
     while (!directionSet) {
       try {
         tries += 1;
-        fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+        fs.writeFileSync(this.gpioPath + 'direction', direction);
         directionSet = true;
       } catch (e) {
         if (tries === 10000) {
@@ -1006,11 +999,11 @@
     }
 
     if (edge) {
-      fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+      fs.writeFileSync(this.gpioPath + 'edge', edge);
     }
 
     if (!!options.activeLow) {
-      fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;, ONE);
+      fs.writeFileSync(this.gpioPath + 'active_low', ONE);
     }
   } else {
     // The pin has already been exported, perhaps by onoff itself, perhaps
@@ -1024,17 +1017,17 @@
     // file, but not the direction file. This is also ok as the WiringPi
     // gpio utility can set both direction and edge. If there are any
     // errors while attempting to perform the modifications, just keep on
-    // truckin&#x27;.
+    // truckin'.
     try {
-      fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+      fs.writeFileSync(this.gpioPath + 'direction', direction);
     } catch (ignore) {
     }
     try {
       if (edge) {
-        fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+        fs.writeFileSync(this.gpioPath + 'edge', edge);
       }
       try {
-        fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;,
+        fs.writeFileSync(this.gpioPath + 'active_low',
           !!options.activeLow ? ONE : ZERO
         );
       } catch (ignore) {
@@ -1043,7 +1036,7 @@
     }
   }
 
-  this.valueFd = fs.openSync(valuePath, &#x27;r+&#x27;); // Cache fd for performance.
+  this.valueFd = fs.openSync(valuePath, 'r+'); // Cache fd for performance.
 
   // Read current value before polling to prevent unauthentic interrupts.
   this.readSync();
@@ -1069,7 +1062,7 @@
     <ul>
     <li>description and source-code<pre class="apidocCodePre">activeLow = function () {
   return fs.readFileSync(
-    this.gpioPath + &#x27;active_low&#x27;)[0] === ONE[0] ? true : false;
+    this.gpioPath + 'active_low')[0] === ONE[0] ? true : false;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1084,7 +1077,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">direction = function () {
-  return fs.readFileSync(this.gpioPath + &#x27;direction&#x27;).toString().trim();
+  return fs.readFileSync(this.gpioPath + 'direction').toString().trim();
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1099,7 +1092,7 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">edge = function () {
-  return fs.readFileSync(this.gpioPath + &#x27;edge&#x27;).toString().trim();
+  return fs.readFileSync(this.gpioPath + 'edge').toString().trim();
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1130,7 +1123,7 @@
     <ul>
     <li>description and source-code<pre class="apidocCodePre">read = function (callback) {
   fs.read(this.valueFd, this.readBuffer, 0, 1, 0, function (err, bytes, buf) {
-    if (typeof callback === &#x27;function&#x27;) {
+    if (typeof callback === 'function') {
       if (err) {
         return callback(err);
       }
@@ -1140,10 +1133,10 @@
   });
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-// Toggle the state of the LED on GPIO #14 every 200ms &#x27;count&#x27; times.
+// Toggle the state of the LED on GPIO #14 every 200ms 'count' times.
 // Here asynchronous methods are used. Synchronous methods are also available.
 (function blink(count) {
-  if (count &#x3c;= 0) {
+  if (count &lt;= 0) {
 return led.unexport();
   }
 
@@ -1172,8 +1165,8 @@ led.write(value ^ 1, function (err) { // Asynchronous write.
   return this.readBuffer[0] === ONE[0] ? 1 : 0;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var Gpio = require(&#x27;onoff&#x27;).Gpio, // Constructor function for Gpio objects.
-led = new Gpio(14, &#x27;out&#x27;),      // Export GPIO #14 as an output.
+var Gpio = require('onoff').Gpio, // Constructor function for Gpio objects.
+led = new Gpio(14, 'out'),      // Export GPIO #14 as an output.
 iv;
 
 // Toggle the state of the LED on GPIO #14 every 200ms.
@@ -1200,7 +1193,7 @@ led.unexport();    // Unexport GPIO and free resources
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">setActiveLow = function (invert) {
-  fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;, !!invert ? ONE : ZERO);
+  fs.writeFileSync(this.gpioPath + 'active_low', !!invert ? ONE : ZERO);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1215,7 +1208,7 @@ led.unexport();    // Unexport GPIO and free resources
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">setDirection = function (direction) {
-  fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+  fs.writeFileSync(this.gpioPath + 'direction', direction);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1230,7 +1223,7 @@ led.unexport();    // Unexport GPIO and free resources
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">setEdge = function (edge) {
-  fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+  fs.writeFileSync(this.gpioPath + 'edge', edge);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1248,7 +1241,7 @@ led.unexport();    // Unexport GPIO and free resources
   this.unwatchAll();
   fs.closeSync(this.valueFd);
   try {
-    fs.writeFileSync(GPIO_ROOT_PATH + &#x27;unexport&#x27;, this.gpio);
+    fs.writeFileSync(GPIO_ROOT_PATH + 'unexport', this.gpio);
   } catch (ignore) {
     // Flow of control always arrives here when cape_universal is enabled on
     // the bbb.
@@ -1261,7 +1254,7 @@ led.unexport();    // Unexport GPIO and free resources
   led.writeSync(value);
 });
 
-process.on(&#x27;SIGINT&#x27;, function () {
+process.on('SIGINT', function () {
   led.<span class="apidocCodeKeywordSpan">unexport</span>();
   button.unexport();
 });
@@ -1283,8 +1276,8 @@ Internally onoff uses sysfs files located at /sys/class/gpio to access GPIOs
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">unwatch = function (callback) {
-  if (this.listeners.length &#x3e; 0) {
-    if (typeof callback !== &#x27;function&#x27;) {
+  if (this.listeners.length &gt; 0) {
+    if (typeof callback !== 'function') {
       this.listeners = [];
     } else {
       this.listeners = this.listeners.filter(function (listener) {
@@ -1311,7 +1304,7 @@ Gpio.prototype.unwatchAll = function () {
 /**
 * Get GPIO direction.
 *
-* Returns - string // &#x27;in&#x27;, or &#x27;out&#x27;
+* Returns - string // 'in', or 'out'
 */
 ...</pre></li>
     </ul>
@@ -1339,7 +1332,7 @@ Gpio.prototype.unexport = function () {
 this.<span class="apidocCodeKeywordSpan">unwatchAll</span>();
 fs.closeSync(this.valueFd);
 try {
-  fs.writeFileSync(GPIO_ROOT_PATH + &#x27;unexport&#x27;, this.gpio);
+  fs.writeFileSync(GPIO_ROOT_PATH + 'unexport', this.gpio);
 } catch (ignore) {
   // Flow of control always arrives here when cape_universal is enabled on
   // the bbb.
@@ -1363,7 +1356,7 @@ try {
 
   if (this.listeners.length === 1) {
     events = Epoll.EPOLLPRI;
-    if (this.opts.debounceTimeout &#x3e; 0) {
+    if (this.opts.debounceTimeout &gt; 0) {
       events |= Epoll.EPOLLONESHOT;
     }
     this.poller.add(this.valueFd, events);
@@ -1373,9 +1366,9 @@ try {
 should turn off. This can be achieved with the following code:
 
 ```js
-var Gpio = require(&#x27;onoff&#x27;).Gpio,
-  led = new Gpio(14, &#x27;out&#x27;),
-  button = new Gpio(4, &#x27;in&#x27;, &#x27;both&#x27;);
+var Gpio = require('onoff').Gpio,
+  led = new Gpio(14, 'out'),
+  button = new Gpio(4, 'in', 'both');
 
 button.<span class="apidocCodeKeywordSpan">watch</span>(function(err, value) {
   led.writeSync(value);
@@ -1436,9 +1429,9 @@ setTimeout(function () {
     <li>example usage<pre class="apidocCodePre">...
 
 ```js
-var Gpio = require(&#x27;onoff&#x27;).Gpio,
-  led = new Gpio(14, &#x27;out&#x27;),
-  button = new Gpio(4, &#x27;in&#x27;, &#x27;both&#x27;);
+var Gpio = require('onoff').Gpio,
+  led = new Gpio(14, 'out'),
+  button = new Gpio(4, 'in', 'both');
 
 button.watch(function(err, value) {
   led.<span class="apidocCodeKeywordSpan">writeSync</span>(value);
@@ -1448,7 +1441,7 @@ button.watch(function(err, value) {
 Here two Gpio objects are being created. One called led for the LED on GPIO #14
 which is an output, and one called button for the momentary push button on
 GPIO #4 which is an input. In addition to specifying that the button is an
-input, the constructors optional third argument is used to specify that &#x27;both&#x27;
+input, the constructors optional third argument is used to specify that 'both'
 ...</pre></li>
     </ul>
 
@@ -1468,7 +1461,7 @@ input, the constructors optional third argument is used to specify that &#x27;bo
     <ul>
     <li>description and source-code<pre class="apidocCodePre">activeLow = function () {
   return fs.readFileSync(
-    this.gpioPath + &#x27;active_low&#x27;)[0] === ONE[0] ? true : false;
+    this.gpioPath + 'active_low')[0] === ONE[0] ? true : false;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1488,7 +1481,7 @@ input, the constructors optional third argument is used to specify that &#x27;bo
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">direction = function () {
-  return fs.readFileSync(this.gpioPath + &#x27;direction&#x27;).toString().trim();
+  return fs.readFileSync(this.gpioPath + 'direction').toString().trim();
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1508,7 +1501,7 @@ input, the constructors optional third argument is used to specify that &#x27;bo
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">edge = function () {
-  return fs.readFileSync(this.gpioPath + &#x27;edge&#x27;).toString().trim();
+  return fs.readFileSync(this.gpioPath + 'edge').toString().trim();
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1549,7 +1542,7 @@ input, the constructors optional third argument is used to specify that &#x27;bo
     <ul>
     <li>description and source-code<pre class="apidocCodePre">read = function (callback) {
   fs.read(this.valueFd, this.readBuffer, 0, 1, 0, function (err, bytes, buf) {
-    if (typeof callback === &#x27;function&#x27;) {
+    if (typeof callback === 'function') {
       if (err) {
         return callback(err);
       }
@@ -1559,10 +1552,10 @@ input, the constructors optional third argument is used to specify that &#x27;bo
   });
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-// Toggle the state of the LED on GPIO #14 every 200ms &#x27;count&#x27; times.
+// Toggle the state of the LED on GPIO #14 every 200ms 'count' times.
 // Here asynchronous methods are used. Synchronous methods are also available.
 (function blink(count) {
-  if (count &#x3c;= 0) {
+  if (count &lt;= 0) {
 return led.unexport();
   }
 
@@ -1596,8 +1589,8 @@ led.write(value ^ 1, function (err) { // Asynchronous write.
   return this.readBuffer[0] === ONE[0] ? 1 : 0;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var Gpio = require(&#x27;onoff&#x27;).Gpio, // Constructor function for Gpio objects.
-led = new Gpio(14, &#x27;out&#x27;),      // Export GPIO #14 as an output.
+var Gpio = require('onoff').Gpio, // Constructor function for Gpio objects.
+led = new Gpio(14, 'out'),      // Export GPIO #14 as an output.
 iv;
 
 // Toggle the state of the LED on GPIO #14 every 200ms.
@@ -1629,7 +1622,7 @@ led.unexport();    // Unexport GPIO and free resources
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">setActiveLow = function (invert) {
-  fs.writeFileSync(this.gpioPath + &#x27;active_low&#x27;, !!invert ? ONE : ZERO);
+  fs.writeFileSync(this.gpioPath + 'active_low', !!invert ? ONE : ZERO);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1649,7 +1642,7 @@ led.unexport();    // Unexport GPIO and free resources
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">setDirection = function (direction) {
-  fs.writeFileSync(this.gpioPath + &#x27;direction&#x27;, direction);
+  fs.writeFileSync(this.gpioPath + 'direction', direction);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1669,7 +1662,7 @@ led.unexport();    // Unexport GPIO and free resources
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">setEdge = function (edge) {
-  fs.writeFileSync(this.gpioPath + &#x27;edge&#x27;, edge);
+  fs.writeFileSync(this.gpioPath + 'edge', edge);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -1692,7 +1685,7 @@ led.unexport();    // Unexport GPIO and free resources
   this.unwatchAll();
   fs.closeSync(this.valueFd);
   try {
-    fs.writeFileSync(GPIO_ROOT_PATH + &#x27;unexport&#x27;, this.gpio);
+    fs.writeFileSync(GPIO_ROOT_PATH + 'unexport', this.gpio);
   } catch (ignore) {
     // Flow of control always arrives here when cape_universal is enabled on
     // the bbb.
@@ -1705,7 +1698,7 @@ led.unexport();    // Unexport GPIO and free resources
   led.writeSync(value);
 });
 
-process.on(&#x27;SIGINT&#x27;, function () {
+process.on('SIGINT', function () {
   led.<span class="apidocCodeKeywordSpan">unexport</span>();
   button.unexport();
 });
@@ -1732,8 +1725,8 @@ Internally onoff uses sysfs files located at /sys/class/gpio to access GPIOs
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">unwatch = function (callback) {
-  if (this.listeners.length &#x3e; 0) {
-    if (typeof callback !== &#x27;function&#x27;) {
+  if (this.listeners.length &gt; 0) {
+    if (typeof callback !== 'function') {
       this.listeners = [];
     } else {
       this.listeners = this.listeners.filter(function (listener) {
@@ -1760,7 +1753,7 @@ Gpio.prototype.unwatchAll = function () {
 /**
 * Get GPIO direction.
 *
-* Returns - string // &#x27;in&#x27;, or &#x27;out&#x27;
+* Returns - string // 'in', or 'out'
 */
 ...</pre></li>
     </ul>
@@ -1793,7 +1786,7 @@ Gpio.prototype.unexport = function () {
 this.<span class="apidocCodeKeywordSpan">unwatchAll</span>();
 fs.closeSync(this.valueFd);
 try {
-  fs.writeFileSync(GPIO_ROOT_PATH + &#x27;unexport&#x27;, this.gpio);
+  fs.writeFileSync(GPIO_ROOT_PATH + 'unexport', this.gpio);
 } catch (ignore) {
   // Flow of control always arrives here when cape_universal is enabled on
   // the bbb.
@@ -1822,7 +1815,7 @@ try {
 
   if (this.listeners.length === 1) {
     events = Epoll.EPOLLPRI;
-    if (this.opts.debounceTimeout &#x3e; 0) {
+    if (this.opts.debounceTimeout &gt; 0) {
       events |= Epoll.EPOLLONESHOT;
     }
     this.poller.add(this.valueFd, events);
@@ -1832,9 +1825,9 @@ try {
 should turn off. This can be achieved with the following code:
 
 ```js
-var Gpio = require(&#x27;onoff&#x27;).Gpio,
-  led = new Gpio(14, &#x27;out&#x27;),
-  button = new Gpio(4, &#x27;in&#x27;, &#x27;both&#x27;);
+var Gpio = require('onoff').Gpio,
+  led = new Gpio(14, 'out'),
+  button = new Gpio(4, 'in', 'both');
 
 button.<span class="apidocCodeKeywordSpan">watch</span>(function(err, value) {
   led.writeSync(value);
@@ -1905,9 +1898,9 @@ setTimeout(function () {
     <li>example usage<pre class="apidocCodePre">...
 
 ```js
-var Gpio = require(&#x27;onoff&#x27;).Gpio,
-  led = new Gpio(14, &#x27;out&#x27;),
-  button = new Gpio(4, &#x27;in&#x27;, &#x27;both&#x27;);
+var Gpio = require('onoff').Gpio,
+  led = new Gpio(14, 'out'),
+  button = new Gpio(4, 'in', 'both');
 
 button.watch(function(err, value) {
   led.<span class="apidocCodeKeywordSpan">writeSync</span>(value);
@@ -1917,7 +1910,7 @@ button.watch(function(err, value) {
 Here two Gpio objects are being created. One called led for the LED on GPIO #14
 which is an output, and one called button for the momentary push button on
 GPIO #4 which is an input. In addition to specifying that the button is an
-input, the constructors optional third argument is used to specify that &#x27;both&#x27;
+input, the constructors optional third argument is used to specify that 'both'
 ...</pre></li>
     </ul>
 
@@ -1930,3 +1923,4 @@ input, the constructors optional third argument is used to specify that &#x27;bo
     ]
 </div>
 </div>
+</body></html>
