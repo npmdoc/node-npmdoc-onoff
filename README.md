@@ -1,6 +1,6 @@
 # npmdoc-onoff
 
-#### api documentation for  [onoff (v1.1.2)](https://github.com/fivdi/onoff#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-onoff.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-onoff) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-onoff.svg)](https://travis-ci.org/npmdoc/node-npmdoc-onoff)
+#### basic api documentation for  [onoff (v1.1.2)](https://github.com/fivdi/onoff#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-onoff.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-onoff) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-onoff.svg)](https://travis-ci.org/npmdoc/node-npmdoc-onoff)
 
 #### GPIO access and interrupt detection with Node.js
 
@@ -74,7 +74,8 @@
     "scripts": {
         "test": "echo \"Tests can only be run manually from the command line. They access hardware GPIOs.\" && exit 1"
     },
-    "version": "1.1.2"
+    "version": "1.1.2",
+    "bin": {}
 }
 ```
 
